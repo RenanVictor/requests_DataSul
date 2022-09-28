@@ -26,10 +26,30 @@
 
 ## **Desenvolvimento**
 
+### 1º Commit
+
 * [X] Faz a requisição para o servidor do sistema e retorna um dataframe.
 * [X] Trabalhar os dados deixando no formato e colunas desejadas.
 * [X] ordenar e renomear as colunas e enviar todos os itens de acordo com a tabela criada.
-* [ ] Criar as funções que busca as ordens pelo código.
-* [ ] Criar as funções que busca as ordens pelo estado da ordem.
-* [ ] Criar a página html com o layout necessário.
-* [ ] linkar a página html com o script que traz as informações do servidor.
+
+### 2º Commit
+
+* [X] Criar as funções que busca as ordens pelo código.
+* [X] Criar as funções que busca as ordens pelo estado da ordem.
+* [X] Criar a página html com o layout necessário.
+* [X] linkar a página html com o script que traz as informações do servidor.
+* [X] implementar o timestamp automático com datas limites de 1 ano. **(2022-09-05)**
+* [X] Adicionar a requisição dos pedidos.
+* [X] Fazer a requisição dos itens dos pedidos.
+* [X] Unir as tabelas e gerar um arquivo relatório
+
+### 3º Commit
+
+* [ ] Implementar a função de trazer os itens de pedidos específicos
+* [ ] Customizar o relatório
+* [ ] Outros...
+
+## **Testes**
+
+* Testes iniciais já realizados antes do primeiro commit
+* Testes da geração do relatório **(2022-09-28)**

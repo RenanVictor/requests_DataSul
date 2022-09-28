@@ -7,6 +7,12 @@ class create_df_ordens:
     def __init__(self):
         self.dataset = pd.DataFrame()
         self.data_api = Request_ordens.dic_data_api()
+        self.estado = pd.DataFrame({'numero':[1,2,3,4,5,6,7,8],
+            'nome':['Não Iniciada','Liberada','Reservada','Separada','Requisitada','Iniciada','Finalizada','Terminada'],
+            'coluna':['statusNotStart','statusReleased','statusReserved','statusKitted','statusIssued','statusStarted','Não Definido','Não Definido']
+
+
+        })
 
 # Envio do request e criação do dataframe de acordo com as ordens
     def create_dataframe_from_json(self, response_json):
@@ -22,15 +28,32 @@ class create_df_ordens:
             self.data_api['ttAppointmentParam']['prodOrderCodeFin'] = op_ininial
             dataset_faixa = self.create_dataframe_from_json(
                 Request_ordens.send_request(self.data_api))
-            print(len(dataset_faixa) + '_______' + op_ininial)
+            print(str(len(dataset_faixa)) + '_______' + str(op_ininial))
             frames.append(dataset_faixa)
-            self.dataset = pd.concat(frames)
+        self.dataset = pd.concat(frames)
+        return self.dataset
+
+    def retorna_df_por_ordem(self,ordem):
+        self.data_api['ttAppointmentParam']['prodOrderCodeIni'] = ordem
+        self.data_api['ttAppointmentParam']['prodOrderCodeFin'] = ordem
+        self.dataset = self.create_dataframe_from_json(Request_ordens.send_request(self.data_api))
         return self.dataset
     
+
+
     def retorna_df_por_codigo(self,codigo):
         self.data_api['ttAppointmentParam']['itemCodeIni'] = codigo
         self.data_api['ttAppointmentParam']['itemCodeFin'] = codigo
-        return
+        self.dataset = self.create_dataframe_from_json(Request_ordens.send_request(self.data_api))
+        return self.dataset
+
+    def retorna_estado(self,string):
+        for item in self.estado.index:
+            if self.estado.loc[item,'coluna']!= 'Não Definido':
+                if self.estado.loc[item,'nome'] == string:
+                    self.data_api['ttAppointmentParam'][self.estado.loc[item,'coluna']] = 'true'
+                else:
+                    self.data_api['ttAppointmentParam'][self.estado.loc[item,'coluna']] = 'false'
 
 # Tratamento e organização dos dados do dataframe
 
@@ -45,27 +68,10 @@ class create_df_ordens:
         self.dataset[string] = pd.to_datetime(
             self.dataset[string], format='%d/%m/%Y')
 
-    def lista_estado(self):
+    def lista_estado(self):# usar o recurso map do pandas
         lista = []
         for item in self.dataset['statusType']:
-            if item == 1:
-                lista.append('Não Iniciada')
-            elif item == 2:
-                lista.append('Liberada')
-            elif item == 3:
-                lista.append('Reservada')
-            elif item == 4:
-                lista.append('Separada')
-            elif item == 5:
-                lista.append('Requisitada')
-            elif item == 6:
-                lista.append('Iniciada')
-            elif item == 7:
-                lista.append('Finalizada')
-            elif item == 8:
-                lista.append('Terminada')
-            else:
-                lista.append('Não Definido')
+            lista.append(self.estado.query('numero == {}'.format(item)).nome[0])
         self.dataset['estado_ordem'] = lista
 
     def tratamento_dos_dados(self):
@@ -111,18 +117,20 @@ def gerar_csv(df: pd.DataFrame):
     df.to_csv('dataset_ordens_plan1.csv', index=False, sep=';')
 
 
-classe_ordem = create_df_ordens()
-#dataset = classe_ordem.cria_faixa_ordem(1273471,1306668)
-# print(dataset)
+#classe_ordem = create_df_ordens()
+#bd_conexao = conexao.conexao_banco()
+
+
+classe = create_df_ordens()
+dataset = classe.retorna_df_por_ordem(1304224)
+
+print(dataset)
 # gerar_csv(dataset)
 
-classe_ordem.dataset = pd.read_csv('dataset_ordens_plan.csv', sep=';')
+'''classe_ordem.dataset = pd.read_csv('dataset_ordens_plan.csv', sep=';')
 classe_ordem.tratamento_dos_dados()
 classe_ordem.ordenando_colunas()
-classe_ordem.alterar_linhas_vazias()
-
-bd_conexao = conexao.conexao_banco()
-
+classe_ordem.alterar_linhas_vazias()'''
 
 #bd_conexao.insert_banco(classe_ordem.dataset)
 #gerar_csv(classe_ordem.dataset)
