@@ -114,17 +114,17 @@ class create_df_ordens:
 
 
 def gerar_csv(df: pd.DataFrame):
-    df.to_csv('dataset_ordens_plan1.csv', index=False, sep=';')
+    df.to_csv('dataset_ordens_plan1.csv', index=False, sep=';', encoding='utf-8-sig')
 
 
 #classe_ordem = create_df_ordens()
 #bd_conexao = conexao.conexao_banco()
 
 
-classe = create_df_ordens()
-dataset = classe.retorna_df_por_ordem(1304224)
+#classe = create_df_ordens()
+#dataset = classe.retorna_df_por_ordem(532041)
 
-print(dataset)
+#print(dataset)
 # gerar_csv(dataset)
 
 '''classe_ordem.dataset = pd.read_csv('dataset_ordens_plan.csv', sep=';')

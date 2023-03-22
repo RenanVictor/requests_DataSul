@@ -1,6 +1,7 @@
 import pandas as pd
 from Request_pedidos import send_request_item
 from pedidos import create_df_pedidos as pedidos
+import conexao
 
 class create_df_itens_pedidos:
     def __init__(self):
@@ -8,13 +9,19 @@ class create_df_itens_pedidos:
         self.itens = pd.DataFrame()
         self.pedidos_completo = pd.DataFrame()
     
+    def converte_str_datetime(self,coluna):
+        self.pedidos_completo[coluna] = pd.to_datetime(self.pedidos_completo[coluna], format=('%Y/%m/%d'))
+
+
+
     def buscando_df(self):
         self.pedidos = pd.read_csv('Pedidos.csv', sep=';')
     
-
-    def converte_str_in_datetime(self):
-        self.pedidos['Data_emissao'] = pd.to_datetime(self.pedidos['Data_emissao'])
-        self.pedidos['data_entrega'] = pd.to_datetime(self.pedidos['data_entrega'])
+    def read_csv_pedidos_completo(self):
+        self.pedidos_completo = pd.read_csv('Pedidos_completo.csv', sep=';')
+        self.converte_str_datetime('dt-entorig')
+        self.converte_str_datetime('data_entrega')
+        self.converte_str_datetime('Data_emissao')
         
     def buscar_itens(self):
         frames = []
@@ -34,17 +41,30 @@ class create_df_itens_pedidos:
     def merge_tabelas(self):
         self.pedidos_completo = pd.merge(self.itens, self.pedidos, on='url_pedidos', how='left')
         self.pedidos_completo.drop(columns=['cod-ord-compra','url_pedidos','nat-operacao-desc','Vendedor','Cliente','n_ped_cliente'], inplace=True)
-        self.pedidos_completo.to_csv('Pedidos_completo.csv', sep=';', index=False,encoding="utf-8")
+        self.pedidos_completo.to_csv('Pedidos_completo.csv', sep=';', index=False,encoding="utf-8-sig")
     
+    def buscando_por_pedidos(self,pedidos):
+        self.pedidos = self.pedidos[self.pedidos.n_pedido.isin(pedidos)]
 
+    def gera_tabela_pedidos(self,data:str):#data deve ser d/m/yyyy
+        classe_pedidos = pedidos()
+        classe_pedidos.data_pedidos = data
+        classe_pedidos.retorna_df_formatado()
+        #classe_pedidos.eliminando_atendido_total()
+        self.pedidos = classe_pedidos.dataset
 
-classe_pedidos = pedidos()
-classe_itens = create_df_itens_pedidos()
+# Inserindo no banco
+    def create_lista_colunas(self):
+        lista_colunas = ['cliente','pedido','item','referencia','descricao','qtd','entrega','emissao','tipo']        
+        return lista_colunas
 
-classe_pedidos.retorna_df_formatado()
-
-classe_itens.pedidos = classe_pedidos.dataset
-classe_itens.buscar_itens()
-classe_itens.seleciona_colunas()
-classe_itens.merge_tabelas()
+    def add_pedidos_tabela(self,tipo):
+        classe_conexao = conexao.conexao_banco()
+        classe_conexao.tabela = 'pedidos'
+        colunas = self.create_lista_colunas()
+        dtype = classe_conexao.colunas_tabela_selecionadas(colunas)
+        classe_conexao.dataset = self.pedidos_completo[['nome-abrev','n_pedido','it-codigo','cod-refer','it-codigo-desc','qt-pedida','data_entrega','Data_emissao']]
+        classe_conexao.dataset['tipo'] = tipo
+        classe_conexao.dataset.columns = colunas
+        classe_conexao.dataset.to_sql(classe_conexao.tabela,classe_conexao.engine, if_exists="append",dtype= dtype, index=False)
 

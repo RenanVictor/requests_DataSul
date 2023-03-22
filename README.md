@@ -45,11 +45,28 @@
 
 ### 3º Commit
 
-* [ ] Implementar a função de trazer os itens de pedidos específicos
-* [ ] Customizar o relatório
-* [ ] Outros...
+* [X] Implementar a função de trazer os itens de pedidos específicos **(2022-09-30)**
+* [X] Adicionar itens na tabela *pedidos* **(2022-10-03)**
+* [X] Criar função para faixa de data, padrão deixa a faixa no mês e pode determinar a data inicial. **(2022-10-07)**
+* [X] Criar a opção de enviar para o banco vários pedidos (problemas com a coluna *tipo*) **Descrição(01)*
+* [ ] Limitar buscar como padrão apenas pedidos diferentes de ***Atendido total***
+
+### 4º Commit
+
+* [ ] Separar apenas os itens fabricados para insert no banco.
+* [ ] Melhorar código para deixar as funções mais claras e autoexplicativas.
+* [ ] Desenvolver o funcionamento do programa em outros computadores.
+* [ ] Criar função para esolher a pasta para criação dos arquivos dos relatórios.
+* [ ] inserir múltiplos itens no banco com *'tipo' diferentes*.
+* [ ] Analisar a existência do pedido antes de fazer o insert (evitar duplicados)
 
 ## **Testes**
 
 * Testes iniciais já realizados antes do primeiro commit
 * Testes da geração do relatório **(2022-09-28)**
+* Foi testado todas as funções implementadas até o momento: **(2022-10-03)**
+    1. A geração dos pedidos (é requisitado todos os pedidos e eliminados os *atendido total*)
+    2. Buscar apenas os itens do pedido selecionado (ainda não é possível buscar vários pedidos por causa da coluna *tipo*)
+    3. Função de selecionar apenas as colunas necessárias para o fazer o insert no banco e preparado e enviado os dados para tabela *pedidos*
+* Implementado e testado a configuração de pedidos por data **(2022-11-03)**
+* **Descrição(01)** - O programa funciona com vários pedidos, mas apenas quando o tipo é igual para todos, atribuir melhorias nesse recurso futuramente.

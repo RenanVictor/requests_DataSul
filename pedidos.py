@@ -6,10 +6,11 @@ from urllib.parse import urlencode
 class create_df_pedidos:
     def __init__(self):
         self.dataset = pd.DataFrame()
+        self.data_pedidos = ''
 
 
     def create_dataframe_pedidos(self):
-        self.dataset = pd.DataFrame(Request_pedidos.send_request_pedido().json()['data'])
+        self.dataset = pd.DataFrame(Request_pedidos.send_request_pedido(self.data_pedidos).json()['data'])
         #self.dataset.style.set_properties(**{'text-align': 'left'})
         return self.dataset
 
@@ -23,7 +24,7 @@ class create_df_pedidos:
         self.dataset[column] = self.dataset[column] /1000
         self.dataset[column] = pd.to_datetime(self.dataset[column],unit='s')
         self.dataset[column] = pd.to_datetime(self.dataset[column].dt.strftime('%Y/%m/%d'))
-        print(self.dataset[column])
+        #print(self.dataset[column])
 
     def create_column_url(self):# retorna uma lista caso o usuário necessite apenas dos url's
         lista_url = []
@@ -36,6 +37,7 @@ class create_df_pedidos:
     def retorna_df_formatado(self):
         self.create_dataframe_pedidos()
         self.selecionando_colunas()
+        self.dataset.query('n_pedido != 48115',inplace=True)# Pedido com data inválida no mês 03/2023
         self.converter_ts_datetime('Data_emissao')
         self.converter_ts_datetime('data_entrega')
         #self.dataset.to_csv('Pedidos_Setembro.csv', sep=';', index=False)
@@ -43,11 +45,3 @@ class create_df_pedidos:
 
     def eliminando_atendido_total(self):
         self.dataset.query('situacao != ("Atendido Total", "Cancelado")',inplace=True)
-
-
-    
-classe = create_df_pedidos() 
-
-
-classe.retorna_df_formatado()
-classe.dataset.to_csv('Pedidos.csv', sep=';', index=False, encoding="utf-8")
