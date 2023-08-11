@@ -20,7 +20,7 @@ def send_request_item(string_encoded):
   url=  "http://totvsserver:8080/dts/datasul-rest/resources/api/fch/fchdis/fchdis0046/items?{}".format(string_encoded)
   payload={}
   headers = {
-    'Authorization': 'Basic cmVuYW46UmV2c0A0MA==',
+    'Authorization': 'Basic cmVuYW46UmV2c0A0NQ==',
     'Cookie': 'JSESSIONID=A7B12A4282A116E5FD46AD70457DA40C'
   }
 
@@ -34,7 +34,7 @@ def send_request_pedido(datas):
   url = "http://totvsserver:8080/dts/datasul-rest/resources/api/fch/fchdis/fchdis0046/internalSalesOrder?max=1000&properties=iIssueDate&properties=fIssueDate&start=0&{}".format(defini_periodo(datas))
   payload={}
   headers = {
-    'Authorization': 'Basic cmVuYW46UmV2c0A0MA==',
+    'Authorization': 'Basic cmVuYW46UmV2c0A0NQ==',
     'Cookie': 'JSESSIONID=A7B12A4282A116E5FD46AD70457DA40C'
   }
 
@@ -43,8 +43,6 @@ def send_request_pedido(datas):
   #print(response.text)
   
   return response
-
-
 
 
 

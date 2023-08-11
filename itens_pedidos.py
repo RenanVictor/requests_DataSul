@@ -2,12 +2,15 @@ import pandas as pd
 from Request_pedidos import send_request_item
 from pedidos import create_df_pedidos as pedidos
 import conexao
+classe_conexao = conexao.conexao_banco()
+
 
 class create_df_itens_pedidos:
     def __init__(self):
         self.pedidos = pd.DataFrame()
         self.itens = pd.DataFrame()
         self.pedidos_completo = pd.DataFrame()
+        self.funcao = 'Maquinas'
     
     def converte_str_datetime(self,coluna):
         self.pedidos_completo[coluna] = pd.to_datetime(self.pedidos_completo[coluna], format=('%Y/%m/%d'))
@@ -46,7 +49,7 @@ class create_df_itens_pedidos:
     def buscando_por_pedidos(self,pedidos):
         self.pedidos = self.pedidos[self.pedidos.n_pedido.isin(pedidos)]
 
-    def gera_tabela_pedidos(self,data:str):#data deve ser d/m/yyyy
+    def gera_tabela_pedidos(self,data:str):#data deve ser dd/mm/yyyy
         classe_pedidos = pedidos()
         classe_pedidos.data_pedidos = data
         classe_pedidos.retorna_df_formatado()
@@ -55,15 +58,24 @@ class create_df_itens_pedidos:
 
 # Inserindo no banco
     def create_lista_colunas(self):
-        lista_colunas = ['cliente','pedido','item','referencia','descricao','qtd','entrega','emissao','tipo']        
+        if self.funcao == 'Maquinas':
+            lista_colunas = ['cliente','pedido','item','referencia','descricao','qtd','entrega','emissao','tipo']        
+            classe_conexao.dataset = self.pedidos_completo[['nome-abrev','n_pedido','it-codigo','cod-refer','it-codigo-desc','qt-pedida','data_entrega','Data_emissao']]
+        else:
+            import datetime
+            lista_colunas = ['op_maq','item','descricao','qtd','referencia','emissao','pedido','entrega','cliente','tipo']
+            classe_conexao.dataset = self.pedidos_completo[['ordem','codigo','descricao','qtd_ord','referencia','data_inicio','pedido','data_fim']]
+            classe_conexao.dataset['cliente'] = 'ESTOQUE'
+            classe_conexao.dataset['pedido'] = 99999
         return lista_colunas
 
+    def teste_df_ordem(self):
+        return classe_conexao.dataset
+    
     def add_pedidos_tabela(self,tipo):
-        classe_conexao = conexao.conexao_banco()
         classe_conexao.tabela = 'pedidos'
         colunas = self.create_lista_colunas()
         dtype = classe_conexao.colunas_tabela_selecionadas(colunas)
-        classe_conexao.dataset = self.pedidos_completo[['nome-abrev','n_pedido','it-codigo','cod-refer','it-codigo-desc','qt-pedida','data_entrega','Data_emissao']]
         classe_conexao.dataset['tipo'] = tipo
         classe_conexao.dataset.columns = colunas
         classe_conexao.dataset.to_sql(classe_conexao.tabela,classe_conexao.engine, if_exists="append",dtype= dtype, index=False)

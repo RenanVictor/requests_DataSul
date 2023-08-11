@@ -3,7 +3,8 @@ from datetime import datetime as dt
 
 def dic_data_api():
     data_inicial_string = dt.strptime('{}-01-01'.format(str(dt.now().year)), '%Y-%m-%d')
-    data_inicial_tsm = round(dt.timestamp(data_inicial_string)*1000)
+    data_inicial_2020 = dt.strptime( '2020-01-01', '%Y-%m-%d')
+    data_inicial_tsm = round(dt.timestamp(data_inicial_2020)*1000)
     data_final = round((dt.timestamp(dt.now())+(86400*365))*1000)
     data_api = {'quickSearchText':'',
                 'ttAppointmentParam':{'prodOrderCodeIni':0,
@@ -46,7 +47,7 @@ def send_request(data_api):
 
     payload = "{\"quickSearchText\":\"\",\"ttAppointmentParam\":{\"prodOrderCodeIni\":0,\"prodOrderCodeFin\":999999999,\"siteCode\":\"\",\"itemCodeIni\":\"\",\"itemCodeFin\":\"ZZZZZZZZZZZZZZZZ\",\"statusNotStart\":true,\"statusReleased\":true,\"statusReserved\":true,\"statusKitted\":true,\"statusIssued\":true,\"statusStarted\":true,\"plannerUserIni\":\"\",\"plannerUserFin\":\"ZZZZZZZZZZZZ\",\"nrProdLineIni\":0,\"nrProdLineFin\":99999,\"iniDate\":1641006000000,\"endDate\":\"2022-08-22T13:54:17.578Z\",\"emissionDateIni\":1641006000000,\"emissionDateFin\":\"2022-08-22T13:54:17.578Z\",\"customerCodeIni\":\"\",\"customerCodeFin\":\"ZZZZZZZZZZZZ\",\"customerGroupIni\":0,\"customerGroupFin\":99,\"customerOrderIni\":\"\",\"customerOrderFin\":\"ZZZZZZZZZZZZ\",\"customerSequenceIni\":0,\"customerSequenceFin\":99999,\"customerDeliveryIni\":0,\"customerDeliveryFin\":99999,\"machineCodeIni\":\"\",\"machineCodeFin\":\"ZZZZZZZZZZZZZZZZ\",\"ordenation\":\"1\",\"iListType\":\"1\"}}"
     headers = {
-        'Authorization': 'Basic cmVuYW46UmV2c0A0MA==',
+        'Authorization': 'Basic cmVuYW46UmV2c0A0NQ==',
         'Content-Type': 'text/plain',
         'Cookie': 'JSESSIONID=44D3A47F060AA7423BF77BED245F70B0'
     }
@@ -54,5 +55,4 @@ def send_request(data_api):
     response = requests.request("POST", url, headers=headers, data=str(data_api))
 
     return response
-
 

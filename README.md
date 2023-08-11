@@ -49,9 +49,16 @@
 * [X] Adicionar itens na tabela *pedidos* **(2022-10-03)**
 * [X] Criar função para faixa de data, padrão deixa a faixa no mês e pode determinar a data inicial. **(2022-10-07)**
 * [X] Criar a opção de enviar para o banco vários pedidos (problemas com a coluna *tipo*) **Descrição(01)*
-* [ ] Limitar buscar como padrão apenas pedidos diferentes de ***Atendido total***
+* [X] Criar janela para inserir os dados no banco
 
 ### 4º Commit
+
+* [X] Criar o botão para apenas o .CSV **(2023-03-28)**
+* [X] Criar função do botão para gerar csv com os pedidos **(2023-03-28)**
+* [X] Melhorado o código de adicionar as ordens de produção na tabela *controle_ordens* **(2023-08-04)**
+* [X] Implementado função de adicionar componentes no banco **(2023-08-11)**
+
+### Implementações futuras
 
 * [ ] Separar apenas os itens fabricados para insert no banco.
 * [ ] Melhorar código para deixar as funções mais claras e autoexplicativas.
@@ -70,3 +77,12 @@
     3. Função de selecionar apenas as colunas necessárias para o fazer o insert no banco e preparado e enviado os dados para tabela *pedidos*
 * Implementado e testado a configuração de pedidos por data **(2022-11-03)**
 * **Descrição(01)** - O programa funciona com vários pedidos, mas apenas quando o tipo é igual para todos, atribuir melhorias nesse recurso futuramente.
+
+## **Lembretes**
+
+```python
+ Coluna{Motivo = ['Peça faltante','Reposição','Venda Máq.','Venda peça'],
+        Status = [Opções retiradas do datasul], Finalidade = [máquina usada ou setor enviado]
+        responsavel [nome do solicitante]
+ }
+ ```

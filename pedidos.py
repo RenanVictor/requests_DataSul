@@ -37,10 +37,9 @@ class create_df_pedidos:
     def retorna_df_formatado(self):
         self.create_dataframe_pedidos()
         self.selecionando_colunas()
-        self.dataset.query('n_pedido != 48115',inplace=True)# Pedido com data inválida no mês 03/2023
+        self.dataset.query('n_pedido != 48115 and n_pedido !=49112',inplace=True)# Pedido com data inválida no mês 03/2023 e 06/2023
         self.converter_ts_datetime('Data_emissao')
         self.converter_ts_datetime('data_entrega')
-        #self.dataset.to_csv('Pedidos_Setembro.csv', sep=';', index=False)
         self.create_column_url()
 
     def eliminando_atendido_total(self):

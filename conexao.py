@@ -11,8 +11,6 @@ class conexao_banco:
         self.dataset = pd.DataFrame()
     
 
-
-
     def todas_colunas_tabela(self):
         colunas_table = self.inspector.get_columns(self.tabela)
         dtype = {}
@@ -37,6 +35,6 @@ class conexao_banco:
         return dtype
 
     def insert_banco(self):
-        dtype = self.se_existe_tabela(self.tabela)        
+        dtype = self.se_existe_tabela()        
         self.dataset.to_sql(self.tabela,self.engine, if_exists="append",dtype= dtype, index=False)
         

@@ -21,9 +21,15 @@ class pedidos:
         if self.cria_csv =='Sim':
             classe.add_pedidos_tabela(self.tipo)
 
+    def atualiza_ordens(self,dataset):
+        classe.funcao = 'Componentes'
+        classe.pedidos_completo = dataset
+        #classe.teste_df_ordem()
+        classe.add_pedidos_tabela(self.tipo)
+
+
 
 '''classe_pedidos = pedidos()
 classe_pedidos.cria_csv = 'Não'
-classe_pedidos.pedido = [48132,48134,48138,48138,48089,48156,48161]
-classe_pedidos.atualizar_pedidos()
-'''
+classe_pedidos.pedido = [48513]
+classe_pedidos.atualizar_pedidos()'''

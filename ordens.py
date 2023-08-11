@@ -9,15 +9,13 @@ class create_df_ordens:
         self.data_api = Request_ordens.dic_data_api()
         self.estado = pd.DataFrame({'numero':[1,2,3,4,5,6,7,8],
             'nome':['Não Iniciada','Liberada','Reservada','Separada','Requisitada','Iniciada','Finalizada','Terminada'],
-            'coluna':['statusNotStart','statusReleased','statusReserved','statusKitted','statusIssued','statusStarted','Não Definido','Não Definido']
-
-
-        })
+            'coluna':['statusNotStart','statusReleased','statusReserved','statusKitted','statusIssued','statusStarted','Não Definido','Não Definido']})
 
 # Envio do request e criação do dataframe de acordo com as ordens
     def create_dataframe_from_json(self, response_json):
         dataset_resultado = pd.DataFrame(
             response_json.json()['data']['ttOrdProdVO'])
+        print(response_json)
         return dataset_resultado
 
     def cria_faixa_ordem(self, op_ininial, op_final):
@@ -71,7 +69,7 @@ class create_df_ordens:
     def lista_estado(self):# usar o recurso map do pandas
         lista = []
         for item in self.dataset['statusType']:
-            lista.append(self.estado.query('numero == {}'.format(item)).nome[0])
+            lista.append(self.estado.iloc[(self.estado.index[self.estado['numero']==item][0])][1])
         self.dataset['estado_ordem'] = lista
 
     def tratamento_dos_dados(self):
@@ -80,13 +78,11 @@ class create_df_ordens:
                                    'referDescription', 'balanceTimeSetup', 'balanceTimeActivity', 
                                    'opCode', 'logSfc', 'siteCode', 'machineCode', 'opSfcCode', 
                                    'qtdScrap', 'splitCode'], inplace=True)
-        self.dataset[['endDate', 'iniDate']] = self.dataset[[
-            'endDate', 'iniDate']].astype(str)
+        self.dataset[['endDate', 'iniDate']] = self.dataset[['endDate', 'iniDate']].astype(str)
         self.insert_string_time('iniDate')
         self.insert_string_time('endDate')
         self.lista_estado()
-        self.dataset.drop(
-            columns=['statusType', 'prtProd', 'prtProd', 'customer'], inplace=True)
+        self.dataset.drop(columns=['statusType', 'prtProd', 'prtProd', 'customer'], inplace=True)
 
 # Preparação dos dados para enviar para o banco de dados
     def ordenando_colunas(self):  # melhorar esta função caso mude as colunas
@@ -114,7 +110,7 @@ class create_df_ordens:
 
 
 def gerar_csv(df: pd.DataFrame):
-    df.to_csv('dataset_ordens_plan1.csv', index=False, sep=';', encoding='utf-8-sig')
+    df.to_csv('ordens.csv', index=False, sep=';', encoding='utf-8-sig')
 
 
 #classe_ordem = create_df_ordens()
@@ -127,10 +123,10 @@ def gerar_csv(df: pd.DataFrame):
 #print(dataset)
 # gerar_csv(dataset)
 
-'''classe_ordem.dataset = pd.read_csv('dataset_ordens_plan.csv', sep=';')
+'''classe_ordem.dataset = pd.read_csv('ordens.csv', sep=';')
 classe_ordem.tratamento_dos_dados()
 classe_ordem.ordenando_colunas()
-classe_ordem.alterar_linhas_vazias()'''
-
+classe_ordem.alterar_linhas_vazias()
+'''
 #bd_conexao.insert_banco(classe_ordem.dataset)
 #gerar_csv(classe_ordem.dataset)
